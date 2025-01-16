@@ -1,0 +1,55 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Material {
+  category    String?
+  createdAt   DateTime           @default(now())
+  id          String             @id @default(uuid())
+  lotPrice    Float
+  name        String             @unique
+  productions Production[]
+  status      EnumMaterialStatus
+  stock       Int
+  supplier    String?
+  unitPrice   Float
+  updatedAt   DateTime           @updatedAt
+}
+
+model Product {
+  costPrice   Float
+  createdAt   DateTime           @default(now())
+  description String
+  id          String             @id @default(uuid())
+  productName String
+  productions Production[]
+  profit      Decimal
+  salesPrice  Float
+  status      EnumProductStatus?
+  stock       Int
+  updatedAt   DateTime           @updatedAt
+}
+
+model Production {
+  createdAt DateTime   @default(now())
+  id        String     @id @default(cuid())
+  material  Material[]
+  product   Product[]
+  quantity  Int?
+  updatedAt DateTime   @updatedAt
+}
+
+enum EnumMaterialStatus {
+  Available
+  OutOfStock
+}
+
+enum EnumProductStatus {
+  Active
+  Inactive
+}
